@@ -1,5 +1,7 @@
 ENV['RACK_ENV'] = 'test' #because we need to know what database to work with
 require 'database_cleaner'
+require 'capybara/rspec'
+require 'sinatra'
 
 # this needs to be after ENV['RACK_ENV'] = 'test'
 # because the server needs to know
@@ -11,6 +13,8 @@ require './lib/server'
 # specs live under a `spec` directory, which RSpec adds to the `$LOAD_PATH`.
 # The generated `.rspec` file contains `--require spec_helper` which will cause this
 # file to always be loaded, without a need to explicitly require it in any files.
+
+Capybara.app = Sinatra::Application.new
 
 RSpec.configure do |config|
 
