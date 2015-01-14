@@ -1,4 +1,5 @@
 ENV['RACK_ENV'] = 'test' #because we need to know what database to work with
+require 'database_cleaner'
 
 # this needs to be after ENV['RACK_ENV'] = 'test'
 # because the server needs to know
@@ -10,7 +11,24 @@ require './lib/server'
 # specs live under a `spec` directory, which RSpec adds to the `$LOAD_PATH`.
 # The generated `.rspec` file contains `--require spec_helper` which will cause this
 # file to always be loaded, without a need to explicitly require it in any files.
-#
+
+RSpec.configure do |config|
+
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
+  
+end
+
 # Given that it is always loaded, you are encouraged to keep this file as
 # light-weight as possible. Requiring heavyweight dependencies from this file
 # will add to the boot time of your test suite on EVERY test run, even for an
