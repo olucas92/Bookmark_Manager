@@ -1,4 +1,5 @@
 require 'data_mapper'
+require 'tag'
 
 env = ENV['RACK_ENV'] || 'development'
 
@@ -24,6 +25,9 @@ end
 post '/links' do
   url = params["url"]
   title = params["title"]
-  Link.create(:url => url, :title => title)
+  tags = params["tags"].split(" ").map { |tag| Tag.first_or_create(:text => tag) }
+  # this will either find this tag or create
+  # if one doesn't exist already
+  Link.create(:url => url, :title => title, :tags => tags)
   redirect to('/')
 end
