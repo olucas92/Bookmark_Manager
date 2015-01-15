@@ -1,4 +1,5 @@
 require 'spec_helper'
+require './lib/user'
 
 feature "User signs up" do
   # #Strictly speaking, the tests should check the UI
