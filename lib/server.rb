@@ -1,5 +1,6 @@
 require 'data_mapper'
 require 'sinatra'
+require 'rack-flash'
 
 
 env = ENV['RACK_ENV'] || 'development'
@@ -9,6 +10,7 @@ DataMapper.setup(:default, "postgres://localhost/bookmark_manager_#{env}")
 
 require './lib/link' #this needs to be done after datamapper is initialized
 require './lib/tag'
+require './lib/user'
 
 # After declaring your models, you should finalise them
 DataMapper.finalize
@@ -19,6 +21,15 @@ DataMapper.auto_upgrade!
 set :views, Proc.new { File.join(root, "..", "views")}
 enable :sessions
 set :session_secret, 'super secret'
+use Rack::Flash
+# attr_reader :password
+# attr_accessor :password_confirmation
+
+# # this is datamaper's method of validating the model.
+# # The model will not be save unless both password
+# # and password_confirmation are the same
+
+# validated_confirmation_of :password
 
 
 get '/' do
@@ -43,6 +54,7 @@ get '/tags/:text' do
 end
 
 get '/users/new' do
+  # @user = User.new
   # note the view is in views/users/new.erb
   # we need the quotes because otherwise
   # ruby would divide the symbol :users by the
@@ -51,10 +63,22 @@ get '/users/new' do
 end
 
 post '/users' do
-  User.create(:email => params[:email],
-              :password => params[:password])
-  session[:user_id] = user.id
-  redirect to ('/')
+  # We just initializa the object
+  # without saving it. it may be invalid
+  user = User.create(:email => params[:email],
+              :password => params[:password],
+              :password_confirmation => params[:password_confirmation])
+  # let's try saving it
+  # if the model is valid,
+  # it will be saved
+  if user.save
+    session[:user_id] = user.id
+    redirect to ('/')
+  # if it's not valid, we'll show the same form again
+  else
+    flash.now[:errors] = @user.errors.full_messages
+    erb :"users/new"
+  end
 end
 
 helpers do
