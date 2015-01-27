@@ -65,14 +65,14 @@ end
 post '/users' do
   # We just initializa the object
   # without saving it. it may be invalid
-  user = User.create(:email => params[:email],
+  @user = User.create(:email => params[:email],
               :password => params[:password],
               :password_confirmation => params[:password_confirmation])
   # let's try saving it
   # if the model is valid,
   # it will be saved
-  if user.save
-    session[:user_id] = user.id
+  if @user.save
+    session[:user_id] = @user.id
     redirect to ('/')
   # if it's not valid, we'll show the same form again
   else

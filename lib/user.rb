@@ -20,7 +20,7 @@ attr_accessor :password_confirmation
 # The model will not be save unless both password
 # and password_confirmation are the same
 
-validates_confirmation_of :password
+validates_confirmation_of :password, :message => "Sorry, your passwords don't match"
 validates_uniqueness_of :email
 
 
