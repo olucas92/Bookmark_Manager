@@ -54,7 +54,7 @@ get '/tags/:text' do
 end
 
 get '/users/new' do
-  # @user = User.new
+  @user = User.new
   # note the view is in views/users/new.erb
   # we need the quotes because otherwise
   # ruby would divide the symbol :users by the
