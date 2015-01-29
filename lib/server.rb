@@ -18,7 +18,7 @@ DataMapper.finalize
 # However, the database tables don't exist yet. Let's tell datamapper to create them
 DataMapper.auto_upgrade!
 
-user Rack::MethodOverride
+use Rack::MethodOverride
 set :views, Proc.new { File.join(root, "..", "views")}
 enable :sessions
 set :session_secret, 'super secret'
