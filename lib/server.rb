@@ -98,6 +98,12 @@ post '/sessions' do
   end
 end
 
+delete '/sessions' do
+  flash[:notice] = 'Goodbye!'
+  session[:user_id] = nil
+  redirect to('/')
+end
+
 helpers do
 
   def current_user
